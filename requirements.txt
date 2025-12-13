@@ -1,5 +1,18 @@
+# --- Core Data Science Libraries ---
 pandas
 numpy
+scikit-learn
+matplotlib
 seaborn
 
+# --- Project Infrastructure ---
+# Libraries needed for setting up and running notebooks/code
+jupyter
+ipykernel 
+dataclasses # For DataIngestionConfig (often built-in, but safe to include)
+
+# --- Development/Debugging Tools ---
+# You may install these later, but they are useful:
+# ipython 
+# black # Code formatter
 -e .
