@@ -9,7 +9,7 @@ catboost
 xgboost
 lightgbm
 Flask
-
+gunicorn
 
 # --- Project Infrastructure ---
 # Libraries needed for setting up and running notebooks/code
