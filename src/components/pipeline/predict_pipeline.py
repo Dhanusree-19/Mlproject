@@ -10,33 +10,13 @@ class PredictionPipeline:
         self.preprocessor = load_object("artifacts/preprocessor.pkl")
 
     def predict(self, data: pd.DataFrame):
-        """
-        Returns class label: Churn / No Churn
-        """
-        try:
-            transformed_data = self.preprocessor.transform(data)
-            prediction = self.model.predict(transformed_data)
-            return "Churn" if prediction[0] == 1 else "No Churn"
-
-        except Exception as e:
-            raise CustomException(e, sys)
+        transformed = self.preprocessor.transform(data)
+        return int(self.model.predict(transformed)[0])
 
     def predict_proba(self, data: pd.DataFrame):
-        """
-        Returns churn probability
-        """
-        try:
-            transformed_data = self.preprocessor.transform(data)
-
-            if hasattr(self.model, "predict_proba"):
-                proba = self.model.predict_proba(transformed_data)
-                return proba
-            else:
-                raise CustomException("Model does not support predict_proba()", sys)
-
-        except Exception as e:
-            raise CustomException(e, sys)
-
+        transformed = self.preprocessor.transform(data)
+        proba = self.model.predict_proba(transformed)[0][1]
+        return round(proba * 100, 2)
 
 class CustomData:
     def __init__(

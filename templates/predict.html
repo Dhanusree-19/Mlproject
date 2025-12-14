@@ -130,9 +130,13 @@
     </form>
 
     {% if prediction %}
-    <h2 class="result">Prediction: {{ prediction }}</h2>
-    <p><strong>Churn Probability:</strong> {{ "%.2f"|format(proba*100) }}%</p>
-{% endif %}
+    <h2>Prediction: {{ prediction }}</h2>
+    {% endif %}
+
+    {% if probability is not none %}
+    <h3>Churn Probability: {{ probability }}%</h3>
+    {% endif %}
+
 
 
     <a href="/">← Back to Home</a>

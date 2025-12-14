@@ -1,19 +1,17 @@
 from flask import Flask, render_template, request
-from src.components.pipeline.predict_pipeline import CustomData, PredictionPipeline
+from src.components.pipeline.predict_pipeline import PredictionPipeline, CustomData
 
-# Create Flask app
 app = Flask(__name__)
 
-#  Home page route
-@app.route("/", methods=["GET"])
+@app.route("/")
 def home():
-    return render_template("index.html")  # This loads the home page
+    return render_template("index.html")
 
-# Predict route
+
 @app.route("/predict", methods=["GET", "POST"])
 def predict():
     prediction = None
-    proba = None
+    probability = None
 
     if request.method == "POST":
         data = CustomData(
@@ -35,17 +33,23 @@ def predict():
             PaperlessBilling=request.form["PaperlessBilling"],
             PaymentMethod=request.form["PaymentMethod"],
             MonthlyCharges=float(request.form["MonthlyCharges"]),
-            TotalCharges=float(request.form["TotalCharges"])
+            TotalCharges=float(request.form["TotalCharges"]),
         )
 
         df = data.get_data_as_data_frame()
         pipeline = PredictionPipeline()
-        proba = pipeline.predict_proba(df)[0][1]
-        prediction = "Churn" if proba >= 0.4 else "No Churn"
 
-    # Render predict.html whether GET or POST
-    return render_template("predict.html", prediction=prediction, proba=proba)
+        pred_value = pipeline.predict(df)          # 0 or 1
+        probability = pipeline.predict_proba(df)   # %
 
-# Run app
+        prediction = "Churn" if pred_value == 1 else "No Churn"
+
+    return render_template(
+        "predict.html",
+        prediction=prediction,
+        probability=probability
+    )
+
+
 if __name__ == "__main__":
     app.run(debug=True)
